@@ -1,0 +1,9 @@
+import math
+imputs = input("Cd0, Cl, e, R, A (separados por espaço): ").split()
+vetor = list(map(float, imputs))
+def Arrasto(vetor):
+    PI = 3.14159265358979323846
+    Cd = vetor [0] + vetor[1]**2/(PI * vetor[2] * vetor [3]* vetor[4])
+    # Cd = Cd0 + Cl**2/(PI * e * R * A)
+    return Cd
+print("Cd: ", Arrasto(vetor))
