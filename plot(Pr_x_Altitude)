@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 vetor = [0.05841094, 10,8263*(10**(-1))]
 
-
+# p: densidade; vetor: [Cd, S]
 def Potencia_Requerida(x, p):
     Pr = (vetor[0] * p * x**3 * vetor[1])/2
     return Pr
