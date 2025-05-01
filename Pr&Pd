@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #densidade = 1,08465 por interpolacao linear com os dados da Tabela A do Anderson
-# Cl = W / (0.5 * densidade * V**2 * A)
-# Pr = W * V / (Cl/Cd) = V**3 * d * Cd * A / 2
+# Cl = W / (0.5 * densidade * V**2 * S)
+# Pr = W * V / (Cl/Cd) = V**3 * d * Cd * S / 2
 
 inputs = input('1250m: Digite 1 para 19x12, 2 para 20x10, 3 para 16x8x3: ')
 if inputs == '1':
@@ -19,7 +19,7 @@ elif inputs == '3':
     output = "16x8x3"
     coeficientes = [3.971*(10**(-4)), -5.794697756*(10**(-2)), -8.607907222*(10**(-2)), 35.84477263]
 # Fazendo com que a funcao funcione para um tipo de helice por vez
-### Modelo vetor [Cd, A]
+### Modelo vetor [Cd, S]
 
 vetor = [0.05841094, 10,8263*(10**(-1))]
 
