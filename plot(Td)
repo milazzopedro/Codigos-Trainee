@@ -11,7 +11,6 @@ def tracao(x, coeficientes):
   y = coeficientes[0]*(x**3) + coeficientes[1]*(x**2) + coeficientes[2]*x + coeficientes[3]
   return y
 
-
 x19x12 = np.linspace(0,40,1000)
 y19x12 = tracao(x19x12, coef19x12)
 
@@ -21,15 +20,13 @@ y20x10 = tracao(x20x10, coef20x10)
 x16x8x3 = np.linspace(0,40,1000)
 y16x8x3 = tracao(x16x8x3, coef16x8x3)
 
-
+# limites impostos uma vez que ao fazer o grafico, verificou-se que sao os valores maximos e minimos necessarios
 plt.ylim(0,40)
 plt.xlim(0,35)
 plt.plot(x19x12, y19x12, label='19x12')
 plt.plot(x20x10, y20x10, label='20x10')
 plt.plot(x16x8x3, y16x8x3, label='16x8x3')
 plt.legend()
-
-
 
 plt.title('Tração Dinâmica(1250m)')
 plt.xlabel('Velocidade (m/s)')
