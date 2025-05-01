@@ -1,1 +1,38 @@
+import math
+import numpy as np
+import matplotlib.pyplot as plt
 
+# dados retirados da tabela disponibilizada, referentes a 1250m de altitude
+coef19x12 = [70.82*(10**(-5)), -5.82468544*(10**(-2)), -1.191019198*(10**(-2)), 34.875]
+coef20x10 = [2.559037963*(10**(-4)), - 60.26632133*(10**(-3)), -1.152160227*(10**(-1)), 37.860]
+coef16x8x3 = [3.971*(10**(-4)), -5.794697756*(10**(-2)), -8.607907222*(10**(-2)), 35.84477263]
+
+def tracao(x, coeficientes):
+  y = coeficientes[0]*(x**3) + coeficientes[1]*(x**2) + coeficientes[2]*x + coeficientes[3]
+  return y
+
+
+x19x12 = np.linspace(0,40,1000)
+y19x12 = tracao(x19x12, coef19x12)
+
+x20x10 = np.linspace(0,40,1000)
+y20x10 = tracao(x20x10, coef20x10)
+
+x16x8x3 = np.linspace(0,40,1000)
+y16x8x3 = tracao(x16x8x3, coef16x8x3)
+
+
+plt.ylim(0,40)
+plt.xlim(0,35)
+plt.plot(x19x12, y19x12, label='19x12')
+plt.plot(x20x10, y20x10, label='20x10')
+plt.plot(x16x8x3, y16x8x3, label='16x8x3')
+plt.legend()
+
+
+
+plt.title('Tração Dinâmica(1250m)')
+plt.xlabel('Velocidade (m/s)')
+plt.ylabel('Tracao (N)')
+plt.grid()
+plt.show()
