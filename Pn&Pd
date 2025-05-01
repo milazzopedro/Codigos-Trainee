@@ -23,7 +23,7 @@ elif inputs == '3':
 
 vetor = [0.05841094, 10,8263*(10**(-1))]
 
-def Potencia_Requerida(x, vetor):
+def Potencia_Requerida(x):
     Pr = (vetor[0] * 1.08465 * x**3 * vetor[1])/2
     return Pr
 
@@ -35,7 +35,7 @@ def Potencia_Dinamica(x, coeficientes):
 
 
 x = np.linspace(0,40,1000)
-y1 = Potencia_Requerida(x, vetor)
+y1 = Potencia_Requerida(x)
 y2 = Potencia_Dinamica(x, coeficientes) 
 
 plt.ylim(0,500)
