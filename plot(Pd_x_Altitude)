@@ -1,1 +1,27 @@
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+vetor = [0.05841094, 10,8263*(10**(-1))]
+
+
+def Potencia_Requerida(x, p):
+    Pr = (vetor[0] * p * x**3 * vetor[1])/2
+    return Pr
+
+plt.ylim(0,600)
+plt.xlim(0,15)
+y1 = Potencia_Requerida(x, 1.2250)
+y2 = Potencia_Requerida(x, 1.1117)
+y3 = Potencia_Requerida(x, 1.08465)
+plt.plot(x, y1, label="Nivel do Mar")
+plt.plot(x, y2, label="Altitude")
+plt.plot(x, y3, label="Altitude Maxima")
+plt.legend()
+
+plt.title('Efeito da altitude sobre a potência necessária')
+plt.xlabel('Velocidade')
+plt.ylabel('Potencia')
+plt.grid()
+plt.show()
 
