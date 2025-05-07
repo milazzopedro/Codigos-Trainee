@@ -1,1 +1,56 @@
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+
+inputs = input('1250m: Digite 1 para 19x12, 2 para 20x10, 3 para 16x8x3: ')
+if inputs == '1':
+    output = "19x12"
+    coeficientes = [70.82*(10**(-5)), -5.82468544*(10**(-2)), -1.191019198*(10**(-2)), 34.875]
+elif inputs == '2':
+    output = "20x10"
+    coeficientes = [2.559037963*(10**(-4)), - 60.26632133*(10**(-3)), -1.152160227*(10**(-1)), 37.860]
+elif inputs == '3':
+    output = "16x8x3"
+    coeficientes = [3.971*(10**(-4)), -5.794697756*(10**(-2)), -8.607907222*(10**(-2)), 35.84477263]
+# Fazendo com que a funcao funcione para um tipo de helice por vez
+### Modelo vetor [Cd, S]
+
+
+W =115.923
+S = 1.08263
+Cd = 0.569
+Cd0 =0.38767
+Cl = 2.05
+d = 1.08465
+
+def Velocidade_Maxima(coeficientes):
+    Vmax = (((coeficientes[3]/S + (W/S))*((coeficientes[3]/S)**2-(4*Cd0*(Cd-Cd0)/Cl**2)/d*Cd0)**(1/2)))**(1/2)
+    return Vmax
+Vmaxi = Velocidade_Maxima(coeficientes)
+
+           
+
+#densidade = 1,08465 por interpolacao linear com os dados da Tabela A do Anderson
+# Cl = W / (0.5 * densidade * V**2 * S)
+# Pr = W * V / (Cl/Cd) = V**3 * d * Cd * S / 2
+
+
+vetor = [0.05841094, 10,8263*(10**(-1))]
+
+def Potencia_Requerida(x):
+    Pr = (vetor[0] * 1.08465 * x**3 * vetor[1])/2
+    return Pr
+
+def Potencia_Dinamica(x, coeficientes):
+  y = coeficientes[0]*(x**3) + coeficientes[1]*(x**2) + coeficientes[2]*x + coeficientes[3]
+  Pd = y * x
+  return Pd
+
+y_vmaxrequerida = Potencia_Requerida(Vmaxi)
+y_vmaxdinamica = Potencia_Dinamica(Vmaxi, coeficientes)
+
+if y_vmaxrequerida == y_vmaxdinamica:
+  print ('Coincide')
+else:
+  print ('Nao coincide')
 
