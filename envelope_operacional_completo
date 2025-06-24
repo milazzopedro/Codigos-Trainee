@@ -1,12 +1,4 @@
-"""
-Created on Sun Jun 15 21:08:57 2025
-@author: Milazzo
-"""
 
-"""
-todas as curvas aderem a uma mesma curva uma vez que a velocidade de estol se iguala a velocidade onde RC = 0
-isso acontece pq RC = 0 independe da massa, portanto para todas as cargas-pagas RC = 0 igual
-"""
 from src.flightlib import *
 from src.perflib import *
 from scipy.optimize import fsolve
@@ -14,36 +6,34 @@ from scipy.interpolate import interp1d
 import numpy as np
 import matplotlib.pyplot as plt
 
-# === Parâmetros ===
+# parametros
 v_array = np.arange(0.01, 25, 0.1)
 h_solutions_I = []
 
-# Teto operacional definido (em metros)
-teto_operacional = 4000
-
-# === RC = 0 ===
+# RC = 0
 for v in v_array:
     def func_h(h):
         return RC(v, h, W)
     try:
         h_sol = fsolve(func_h, 500.0)[0]
-        h_solutions_I.append(h_sol if h_sol <= teto_operacional else np.nan)
+        h_solutions_I.append(h_sol)
     except:
         h_solutions_I.append(np.nan)
 
 h_solutions_I = np.array(h_solutions_I)
 
-# === Range de carga paga ===
-peso_vazio = 2.5  # hipótese
-carga_range = np.arange(peso_vazio, MTOW + 1e-6, 1.0)
+# range de carga paga
+peso_vazio = 2.5 #hipotese, muda-se uma vez que estiver definido
+carga_range = np.arange(peso_vazio, MTOW + 1e-6, 1.0) # +1e-6 implica que o valor sera incluido mesmo que igual a MTOW-peso_vazio
 
 plt.figure(figsize=(12, 7))
 colors = plt.cm.viridis(np.linspace(0, 1, len(carga_range)))
 
-# Apenas para legenda
+# serve apenas para botar a legenda em ordem na hora de plotar
 legend_elements = []
 
 for i, M in enumerate(carga_range):
+    # curva de estol para cada carga paga
     h_stall = np.linspace(0, 6000, 1000)
     v_stall = V_stall(h_stall, M)
 
@@ -62,23 +52,20 @@ for i, M in enumerate(carga_range):
     h_RC_interpolada = RC_interpolada(v_interpolada_range)
     h_STALL_interpolada = STALL_interpolada(v_interpolada_range)
 
+    # intersecao entre as curvas marca onde V_stall >= V(RC=0)
     intersecao = (~np.isnan(h_RC_interpolada)) & (~np.isnan(h_STALL_interpolada)) & (h_RC_interpolada <= h_STALL_interpolada)
     if np.any(intersecao):
         inter_intersecao = np.where(intersecao)[0][0]
         v_intersecao_real = v_interpolada_range[inter_intersecao]
     else:
-        continue
+        continue 
 
-    # Cortando curvas pelo valor da interseção e teto operacional
+    # envelope final para cada carga paga
     v_estol_corte = v_stall[(v_stall <= v_intersecao_real) & (~np.isnan(v_stall))]
     h_estol_corte = h_stall[(v_stall <= v_intersecao_real) & (~np.isnan(v_stall))]
-    v_estol_corte = v_estol_corte[h_estol_corte <= teto_operacional]
-    h_estol_corte = h_estol_corte[h_estol_corte <= teto_operacional]
 
     v_RC_corte = v_array[(v_array >= v_intersecao_real) & (~np.isnan(h_solutions_I))]
     h_RC_corte = h_solutions_I[(v_array >= v_intersecao_real) & (~np.isnan(h_solutions_I))]
-    v_RC_corte = v_RC_corte[h_RC_corte <= teto_operacional]
-    h_RC_corte = h_RC_corte[h_RC_corte <= teto_operacional]
 
     v_envelope_final = np.concatenate([v_estol_corte, v_RC_corte])
     h_envelope_final = np.concatenate([h_estol_corte, h_RC_corte])
@@ -87,10 +74,10 @@ for i, M in enumerate(carga_range):
     v_envelope_final = v_envelope_final[ordem]
     h_envelope_final = h_envelope_final[ordem]
 
-    linha, = plt.plot(v_envelope_final, h_envelope_final, color=colors[i], label=f'{M - peso_vazio:.1f} kg')
+    linha, = plt.plot(v_envelope_final, h_envelope_final, color=colors[i], label=f'{M-peso_vazio:.1f} kg')
     legend_elements.append(linha)
 
-    # Destaque de região esperada
+    # viadagem pra marcar os valores esperados
     if np.isclose(M, peso_vazio):
         ymin, ymax = 850, 1300
         v_destaque = []
@@ -108,17 +95,17 @@ for i, M in enumerate(carga_range):
             h_base = np.full_like(v_destaque, ymin)
             highlight_color = plt.cm.viridis(0.2)
             highlight = plt.fill_between(v_destaque, h_base, h_destaque,
-                                         color=highlight_color, alpha=0.3,
-                                         edgecolor='none')
+                                          color=highlight_color, alpha=0.3,
+                                          edgecolor='none')
 
-# === Finalização do Gráfico ===
+
 plt.xlabel('Velocidade [m/s]')
 plt.ylabel('Altitude [m]')
-plt.title(f'Envelope Operacional com Teto Operacional de {teto_operacional} m')
+plt.title('Envelope Operacional para Diferentes Cargas Pagas')
 plt.grid(True)
 legend_elements.append(plt.Line2D([0], [0], color=highlight_color, lw=6, alpha=0.3, label='Região Esperada (850-1300 m)'))
 plt.legend(handles=legend_elements, title="Carga Paga")
 plt.xlim(0, 20)
-plt.ylim(0, teto_operacional + 500)  # margem para visualização
+plt.ylim(0, 7000)
 plt.tight_layout()
 plt.show()
